@@ -1,0 +1,9 @@
+rootProject.name = 'eisen-build'
+include 'eisen-bios'
+include 'eisen-file'
+include 'eisen-sched'
+include 'eisen-dao'
+include 'eisen-log'
+include 'eisen-client'
+include 'eisen-server'
+
