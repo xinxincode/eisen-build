@@ -1,3 +1,39 @@
 group 'org.eisen'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    ext {
+        springBootVersion = '2.1.1.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+ext.libraryBuildConfig = [
+        deps     : [
+                "spring-boot": 'org.springframework.boot:spring-boot-starter-web:2.1.1.RELEASE',
+        ]
+]
+
+ext.libraryBuildConfig1 = [
+        deps     : [
+                "spring-boot": 'org.springframework.boot:spring-boot-starter-web:2.1.1.RELEASE',
+        ]
+]
+
+ext.lll = '2.1.1.RELEASE'
+
+
+ext {
+    dependencies = [
+            "spring": libraryBuildConfig.deps.'spring-boot',
+            "spring1": libraryBuildConfig1.deps.'spring-boot'
+    ]
+}
+
