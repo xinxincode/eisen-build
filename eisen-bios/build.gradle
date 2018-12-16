@@ -4,32 +4,28 @@ buildscript {
     }
     repositories {
         mavenLocal()
-//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${rootProject.ext.lll}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply from: rootProject.file('gradle/libraries.gradle')
 
 group 'org.eisen'
 version '1.0-SNAPSHOT'
-
 sourceCompatibility = 1.8
 
-repositories {
-    mavenLocal()
-//    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-}
 
 dependencies {
-//    testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.1.RELEASE'
+    testCompile(testDeps.junit)
+    compile(springDeps.springBootStarterWeb)
 
 //    compile(
 //            'dom4j:dom4j:1.6.1',
@@ -63,15 +59,7 @@ dependencies {
 
 }
 
-task runtimeToLocal(type: Copy) {
-    from configurations.runtime
-    into '/libs' // 目标位置
 
-}
 
-configurations.all {
-    // 动态版本
-    resolutionStrategy.cacheDynamicVersionsFor 777, 'hours'
-    // 变化模块
-    resolutionStrategy.cacheChangingModulesFor 777, 'hours'
-}
+
+

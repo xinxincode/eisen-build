@@ -7,4 +7,6 @@ package org.eisen.dao;
  **/
 public class DaoApplication {
 
+    public static void main(String[] args) {
+    }
 }

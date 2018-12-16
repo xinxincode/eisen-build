@@ -37,5 +37,24 @@ public class FileCheck {
         SHA1,SHA_256,SHA_512,MD5
     }
 
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+        File file = new File("D:\\Work\\Apache24\\htdocs\\file\\apache-maven-3.6.0-bin.zip");
+        String  s = getCheckValue(file, "SHA1");
+        System.out.println(s);
+        System.out.println(s.length());
+        s = getCheckValue(file, "SHA-256");
+        System.out.println(s);
+        System.out.println(s.length());
+        s = getCheckValue(file, "SHA-512");
+        System.out.println(s);
+        System.out.println(s.length());
+        s = getCheckValue(file, "MD5");
+        System.out.println(s);
+        System.out.println(s.length());
+
+
+
+    }
+
 
 }
