@@ -1,5 +1,6 @@
 package org.eisen.dao.jdbc;
 
+import java.io.File;
 import java.sql.*;
 
 /**
@@ -9,8 +10,16 @@ import java.sql.*;
  **/
 public class DaoJDBC {
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        new DaoJDBC().jdbc();
+    public static void main(String[] args) throws Exception {
+//        new DaoJDBC().jdbc();
+        String s = DaoJDBC.class.getResource("/").getPath();
+        String s1 = DaoJDBC.class.getResource("").getPath();
+        System.out.println(s);
+        System.out.println(s1);
+
+        File directory = new File("");// 参数为空
+        String courseFile = directory.getCanonicalPath();
+        System.out.println(courseFile);
 
     }
 

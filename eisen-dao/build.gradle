@@ -32,6 +32,7 @@ dependencies {
             databaseDeps.HikariCP,
             databaseDeps.dropwizard,
             databaseDeps.mybatis,
+            databaseDeps.mybatisGenertor,
             dataFormat.gson,
     )
 

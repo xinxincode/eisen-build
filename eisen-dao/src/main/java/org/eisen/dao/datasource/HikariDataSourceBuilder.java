@@ -7,7 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 import com.zaxxer.hikari.metrics.dropwizard.CodahaleMetricsTrackerFactory;
 
-import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * @Author Eisen
@@ -17,37 +17,154 @@ import javax.sql.DataSource;
 public class HikariDataSourceBuilder {
 
 
-    private String url;
-    private String username;
-    private String password;
-    private String driver;
-    private String poolname;
+    private String url;                         //链接地址
+    private String username;                    //用户名
+    private String password;                    //密码
+    private String driver;                      //驱动
+    private String poolname;                    //连接池名字
+
+    private boolean isAutoCommit = true;        //自动提交
+    private long connectionTimeout = 30000L;    //客户端获取链接超时时间
+    private long idleTimeout = 600000L;         //连接最大空闲时间
+    private long maxLifetime = 1800000L;        //连接最大存在时间
+    private int minIdle = -1;                   //连接池最小存在连接数默认与maxPoolSize相同
+    private int maxPoolSize = 10;               //连接池最大容量
+    private long leakDetectionThreshold = 0L;   //连接离开连接池的最大时间,超时后抛异常但不影响
+
+    private MetricsTrackerFactory mtf;
+
+
     HikariConfig config = new HikariConfig();
 
 
-    public HikariDataSourceBuilder url(String var) {
+    HikariDataSourceBuilder url(String var) {
         this.url = var;
         return this;
     }
 
-    public HikariDataSourceBuilder username(String var) {
+    HikariDataSourceBuilder username(String var) {
         this.username = var;
         return this;
     }
 
-    public HikariDataSourceBuilder password(String var) {
+    HikariDataSourceBuilder password(String var) {
         this.password = var;
         return this;
     }
 
-    public HikariDataSourceBuilder driver(String var) {
+    HikariDataSourceBuilder driver(String var) {
         this.driver = var;
         return this;
     }
 
-    public HikariDataSourceBuilder poolname(String var) {
-        //连接池名字 用于日志打印前缀
+    HikariDataSourceBuilder poolname(String var) {
         this.poolname = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder isAutoCommit(boolean var) {
+        this.isAutoCommit = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder connectionTimeout(long var) {
+        this.connectionTimeout = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder idleTimeout(long var) {
+        this.idleTimeout = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder maxLifetime(long var) {
+        this.maxLifetime = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder minIdle(int var) {
+        this.minIdle = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder maxPoolSize(int var) {
+        this.maxPoolSize = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder leakDetectionThreshold(long var) {
+        this.leakDetectionThreshold = var;
+        return this;
+    }
+
+    HikariDataSourceBuilder addDataSourceProperty(Map<String, String> kv) {
+        for (String key : kv.keySet()) {
+            config.addDataSourceProperty(key, kv.get(key));
+        }
+        return this;
+    }
+
+    HikariDataSourceBuilder addDataSourceProperty(String k, String v) {
+        config.addDataSourceProperty(k, v);
+        return this;
+    }
+
+    HikariDataSourceBuilder defaultProperty() {
+        //sql缓存开启
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        //每个连接预处理sql缓存的数量 最好设置在250-500之间
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        //缓存预处理sql的最大长度 mysql默认256 最好2048
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        //新版的mysql 可以设置在服务端缓存预处理的sql 用新版mysql的话可以加入这个
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        //官网描述提升性能
+        config.addDataSourceProperty("useLocalSessionState", "true");
+        config.addDataSourceProperty("cacheResultSetMetadata", "true");
+        config.addDataSourceProperty("cacheServerConfiguration", "true");
+        config.addDataSourceProperty("elideSetAutoCommits", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("maintainTimeStats", "false");
+        return this;
+    }
+
+
+    /**
+     * 监控设置
+     */
+    HikariDataSourceBuilder addHealthCheckProperty(String k, String v) {
+        synchronized (this.getClass()) {
+            if (mtf == null) {
+                mtf = new CodahaleMetricsTrackerFactory(new MetricRegistry());
+                config.setMetricsTrackerFactory(mtf);
+            }
+        }
+        config.addHealthCheckProperty(k, v);
+        return this;
+    }
+
+
+    /**
+     * 监控设置
+     */
+    HikariDataSourceBuilder addHealthCheckProperty(MetricsTrackerFactory mtf, Map<String, String> kv) {
+        config.setMetricsTrackerFactory(mtf);
+        for (String key : kv.keySet()) {
+            config.addHealthCheckProperty(key, kv.get(key));
+        }
+        return this;
+    }
+
+    /**
+     * 默认监控设置
+     */
+    HikariDataSourceBuilder defaultHealthCheckProperty() {
+        MetricRegistry mr = new MetricRegistry();
+//        config.setMetricRegistry(mr);//cannot use setMetricsTrackerFactory() and setMetricRegistry() together
+        MetricsTrackerFactory mtf = new CodahaleMetricsTrackerFactory(new MetricRegistry());
+        config.setMetricsTrackerFactory(mtf);
+        config.addHealthCheckProperty("connectivityCheckTimeoutMs", "1000");
+        config.addHealthCheckProperty("expected99thPercentileMs", "10");
         return this;
     }
 
@@ -76,25 +193,23 @@ public class HikariDataSourceBuilder {
         config.setDriverClassName(driver);
         config.setPoolName(poolname);
 
-        //连接池名字 用于日志打印前缀
-        config.setPoolName("p1");
-
 
         //自动提交 默认true
-        config.setAutoCommit(true);
+        config.setAutoCommit(isAutoCommit);
+
 
         /**
          *  客户端等待池中连接的最大毫秒数,如果在没有连接可用的情况下超时抛出SQLException
          *  最低250毫秒,默认值：30000(30秒)
          */
-        config.setConnectionTimeout(30000);
+        config.setConnectionTimeout(connectionTimeout);
 
         /**
          * 允许连接空闲的时间
          * 链接空闲时间超过设定值,且连接池中的连接数超过设定的最小值则移除
          * 允许的最小值为10000毫秒（10秒）, 默认值：600000（10分钟）
          */
-        config.setIdleTimeout(600000);
+        config.setIdleTimeout(idleTimeout);
 
         /**
          * 此属性控制连接的最长生命周期。
@@ -103,7 +218,7 @@ public class HikariDataSourceBuilder {
          * 值0表示无限，当然也受制于idleTimeout值的设置。
          * 默认值：1800000（30分钟）
          */
-        config.setMaxLifetime(1800000);
+        config.setMaxLifetime(maxLifetime);
 
         /**
          * 如果您的驱动程序支持JDBC4，我们强烈建议您不要设置此属性。
@@ -120,7 +235,7 @@ public class HikariDataSourceBuilder {
          * 但是，为了获得最高性能和对峰值需求的响应，我们建议不要设置此值，而是允许HikariCP充当固定大小的连接池。
          * 默认值：与maximumPoolSize相同
          */
-//        config.setMinimumIdle();
+        config.setMinimumIdle((minIdle == -1L) ? maxPoolSize : minIdle);
 
         /**
          * 此属性控制允许池到达的最大大小，包括空闲和正在使用的连接。
@@ -134,17 +249,8 @@ public class HikariDataSourceBuilder {
          *
          * 默认值：10
          */
-        config.setMaximumPoolSize(2);
+        config.setMaximumPoolSize(maxPoolSize);
 
-        /**
-         * 设置监控
-         */
-        MetricRegistry mr = new MetricRegistry();
-//        config.setMetricRegistry(mr);//cannot use setMetricsTrackerFactory() and setMetricRegistry() together
-        MetricsTrackerFactory mtf = new CodahaleMetricsTrackerFactory(mr);
-        config.setMetricsTrackerFactory(mtf);
-        config.addHealthCheckProperty("connectivityCheckTimeoutMs", "1000");
-        config.addHealthCheckProperty("expected99thPercentileMs", "10");
 
         /**
          * 连接泄露检测 连接离开连接池的时间
@@ -152,29 +258,9 @@ public class HikariDataSourceBuilder {
          * 开发时启用，生产时关闭
          * 默认0 不开启 最低 5000 毫秒
          */
-        config.setLeakDetectionThreshold(5000);
+        config.setLeakDetectionThreshold(leakDetectionThreshold);
 
-
-        //sql缓存开启
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        //每个连接预处理sql缓存的数量 最好设置在250-500之间
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        //缓存预处理sql的最大长度 mysql默认256 最好2048
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        //新版的mysql 可以设置在服务端缓存预处理的sql 用新版mysql的话可以加入这个
-        config.addDataSourceProperty("useServerPrepStmts", "true");
-
-        //官网描述提升性能
-        config.addDataSourceProperty("useLocalSessionState", "true");
-        config.addDataSourceProperty("rewriteBatchedStatements", "true");
-        config.addDataSourceProperty("cacheResultSetMetadata", "true");
-        config.addDataSourceProperty("cacheServerConfiguration", "true");
-        config.addDataSourceProperty("elideSetAutoCommits", "true");
-        config.addDataSourceProperty("rewriteBatchedStatements", "true");
-        config.addDataSourceProperty("maintainTimeStats", "false");
-        HikariDataSource ds = new HikariDataSource(config);
-
-        return ds;
+        return new HikariDataSource(config);
     }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="eisendb@192.168.200.130">
+<dataSource name="eisendb@192.168.200.177">
   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.14">
     <root id="1">
       <ServerVersion>8.0.12</ServerVersion>
@@ -1096,5 +1096,260 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
+    <table id="274" parent="2" name="tb_file_detail">
+      <Comment>文件存储明细表</Comment>
+    </table>
+    <table id="275" parent="2" name="tb_user_file">
+      <Comment>用户文件关联表</Comment>
+    </table>
+    <table id="276" parent="2" name="tb_user_info">
+      <Comment>用户基础信息表</Comment>
+    </table>
+    <column id="277" parent="274" name="file_id">
+      <Position>1</Position>
+      <Comment>文件id 主键</Comment>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="278" parent="274" name="file_name">
+      <Position>2</Position>
+      <Comment>存储在服务器的文件名</Comment>
+      <DataType>varchar(256)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="279" parent="274" name="file_path">
+      <Position>3</Position>
+      <Comment>存储在服务器的相对文件路径且不包含文件名 如: /file/path/</Comment>
+      <DataType>varchar(512)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="280" parent="274" name="sha_512">
+      <Position>4</Position>
+      <Comment>文件的sha-512值 非空 不重索引</Comment>
+      <DataType>char(128)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="281" parent="274" name="sha_256">
+      <Position>5</Position>
+      <Comment>文件的sha-256值 可为空</Comment>
+      <DataType>char(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="282" parent="274" name="sha_1">
+      <Position>6</Position>
+      <Comment>文件的sha1值 可为空</Comment>
+      <DataType>char(40)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="283" parent="274" name="md5">
+      <Position>7</Position>
+      <Comment>文件的md5值 可为空</Comment>
+      <DataType>char(32)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="284" parent="274" name="create_datetime">
+      <Position>8</Position>
+      <Comment>文件存到服务器的时间 默认当前时间</Comment>
+      <DataType>datetime|0s</DataType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="285" parent="274" name="idun_filedetail_sha256">
+      <ColNames>sha_256</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <key id="286" parent="274" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>file_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="287" parent="274" name="idun_filedetail_sha256">
+      <ColNames>sha_256</ColNames>
+      <UnderlyingIndexName>idun_filedetail_sha256</UnderlyingIndexName>
+    </key>
+    <column id="288" parent="275" name="data_id">
+      <Position>1</Position>
+      <Comment>id</Comment>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="289" parent="275" name="user_id">
+      <Position>2</Position>
+      <Comment>user_info的用户id</Comment>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="290" parent="275" name="file_id">
+      <Position>3</Position>
+      <Comment>file_detail的文件id</Comment>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="291" parent="275" name="file_name">
+      <Position>4</Position>
+      <Comment>用户所见文件名称</Comment>
+      <DataType>varchar(128)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="292" parent="275" name="file_path">
+      <Position>5</Position>
+      <Comment>用户所见文件路径</Comment>
+      <DataType>varchar(256)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="293" parent="275" name="file_date">
+      <Position>6</Position>
+      <Comment>用户获取文件的时间</Comment>
+      <DataType>datetime|0s</DataType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="294" parent="275" name="id_userfile_userid">
+      <Comment>用户id索引</Comment>
+      <ColNames>user_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="295" parent="275" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>data_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="296" parent="275" name="fk_userfile_userid">
+      <ColNames>user_id</ColNames>
+      <RefSchemaName>eisendb</RefSchemaName>
+      <RefTableName>tb_user_info</RefTableName>
+      <RefColNames>user_id</RefColNames>
+    </foreign-key>
+    <column id="297" parent="276" name="user_id">
+      <Position>1</Position>
+      <Comment>用户id</Comment>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="298" parent="276" name="signin_name">
+      <Position>2</Position>
+      <Comment>登录名</Comment>
+      <DataType>varchar(32)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="299" parent="276" name="signin_passwdmd5">
+      <Position>3</Position>
+      <Comment>登陆密码md5加密</Comment>
+      <DataType>varchar(256)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="300" parent="276" name="signin_passwdaes">
+      <Position>4</Position>
+      <Comment>登陆密码aes加密</Comment>
+      <DataType>varchar(256)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="301" parent="276" name="passwd_lastdate">
+      <Position>5</Position>
+      <Comment>上次修改密码时间</Comment>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="302" parent="276" name="signup_date">
+      <Position>6</Position>
+      <Comment>注册日期 默认插入时间</Comment>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="303" parent="276" name="signin_lastdate">
+      <Position>7</Position>
+      <Comment>上次登陆时间</Comment>
+      <DataType>datetime|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="304" parent="276" name="nick_name">
+      <Position>8</Position>
+      <Comment>用户昵称</Comment>
+      <DataType>varchar(256)|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;未设置昵称&apos;</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="305" parent="276" name="user_email">
+      <Position>9</Position>
+      <Comment>用户邮箱</Comment>
+      <DataType>varchar(128)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="306" parent="276" name="user_mphone">
+      <Position>10</Position>
+      <Comment>用户手机号</Comment>
+      <DataType>varchar(64)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="307" parent="276" name="user_address">
+      <Position>11</Position>
+      <Comment>用户地址</Comment>
+      <DataType>varchar(512)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="308" parent="276" name="user_sex">
+      <Position>12</Position>
+      <Comment>用户性别</Comment>
+      <DataType>tinyint(1)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="309" parent="276" name="head_portrait">
+      <Position>13</Position>
+      <Comment>用户头像文件id</Comment>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="310" parent="276" name="idun_userinfo_signinname">
+      <ColNames>signin_name</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <index id="311" parent="276" name="idun_userinfo_useremail">
+      <ColNames>user_email</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <index id="312" parent="276" name="idun_userinfo_usermphone">
+      <ColNames>user_mphone</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <key id="313" parent="276" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>user_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="314" parent="276" name="idun_userinfo_signinname">
+      <ColNames>signin_name</ColNames>
+      <UnderlyingIndexName>idun_userinfo_signinname</UnderlyingIndexName>
+    </key>
+    <key id="315" parent="276" name="idun_userinfo_useremail">
+      <ColNames>user_email</ColNames>
+      <UnderlyingIndexName>idun_userinfo_useremail</UnderlyingIndexName>
+    </key>
+    <key id="316" parent="276" name="idun_userinfo_usermphone">
+      <ColNames>user_mphone</ColNames>
+      <UnderlyingIndexName>idun_userinfo_usermphone</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>
