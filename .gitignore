@@ -25,5 +25,8 @@ hs_err_pid*
 #工程文件
 .gradle
 .idea
+.gradle/*
+.idea/*
+*.iml
 */out
 */build
