@@ -1,4 +1,4 @@
-package org.eisen.dao.mybatis;
+package org.eisen.dao.mybatis.generator;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
@@ -7,7 +7,6 @@ import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -19,16 +18,13 @@ import java.util.List;
  * @Date 2018/12/17 15:19
  * @Description:
  **/
-public class Genertor {
+public class MybatisGenerator {
     public static void main(String[] args) throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException {
         List<String> warnings = new ArrayList<String>();
-        boolean overwrite = true;
-//        File configFile = new File("D:\\Work\\Projects\\eisen-build\\eisen-dao\\src\\main\\java\\org\\eisen\\dao\\mybatis\\generatorConfig.xml");
-        InputStream in = Genertor.class.getClassLoader().getResourceAsStream("org/eisen/dao/mybatis/generatorConfig.xml");
+        InputStream in = MybatisGenerator.class.getClassLoader().getResourceAsStream("org/eisen/dao/mybatis/generator/generatorConfig.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);
-//        Configuration config = cp.parseConfiguration(configFile);
         Configuration config = cp.parseConfiguration(in);
-        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        DefaultShellCallback callback = new DefaultShellCallback(true);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
         myBatisGenerator.generate(null);
     }

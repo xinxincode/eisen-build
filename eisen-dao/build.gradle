@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
-apply from: rootProject.file('gradle/libraries.gradle')
+apply from: rootProject.file('gradle/base.gradle')
 
 group 'org.eisen'
 version '1.0-SNAPSHOT'

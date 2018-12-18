@@ -56,5 +56,12 @@ allprojects {
         into '/libs' // 目标位置
     }
 
+    task processAll(type: Copy) {
+        from('src/main/java') {
+            exclude '**/*.java'
+        }
+        into 'out/production/classes/'
+    }
+
 }
 

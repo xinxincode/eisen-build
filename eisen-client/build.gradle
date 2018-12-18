@@ -12,5 +12,4 @@ repositories {
 }
 
 dependencies {
-    compile project(':eisen-bios')
 }

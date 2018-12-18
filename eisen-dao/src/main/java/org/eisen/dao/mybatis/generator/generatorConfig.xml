@@ -5,7 +5,7 @@
 <generatorConfiguration>
     <context id="db" targetRuntime="MyBatis3Simple">
 
-        <commentGenerator type="org.eisen.dao.mybatis.EisenCommentGenerator">
+        <commentGenerator type="org.eisen.dao.mybatis.generator.EisenCommentGenerator">
             <!--<property name="suppressAllComments" value="false"/>-->
             <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
             <property name="addRemarkComments" value="true"/>
@@ -23,8 +23,10 @@
                          targetProject="D:\Work\Projects\eisen-build\eisen-dao\src\main\java"/>
         <javaClientGenerator type="XMLMAPPER" targetPackage="org.eisen.dao.orm.mapper"
                              targetProject="D:\Work\Projects\eisen-build\eisen-dao\src\main\java"/>
-        <table  tableName="tb_file_detail" />
-        <table  tableName="tb_user_info" />
-        <table  tableName="tb_user_file" />
+
+        <table schema="eisendb" tableName="tb_file_detail" />
+        <table schema="eisendb" tableName="tb_user_info" />
+        <table schema="eisendb" tableName="tb_user_file" />
+
     </context>
 </generatorConfiguration>

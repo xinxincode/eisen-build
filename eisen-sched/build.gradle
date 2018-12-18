@@ -12,7 +12,4 @@ repositories {
 }
 
 dependencies {
-    compile project(':eisen-bios')
-//    compile 'org.quartz-scheduler:quartz:2.3.0'
-
 }

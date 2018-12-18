@@ -1,7 +1,7 @@
-编辑配置文件
+#编辑配置文件
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
-修改如下:
+#修改如下:
 TYPE="Ethernet"
 PROXY_METHOD="none"
 BROWSER_ONLY="no"
@@ -25,5 +25,5 @@ GATEWAY="192.168.200.2"             # 网关地址
 DNS1="8.8.8.8"                      # DNS服务器地址1
 DNS2="144.144.144.144"              # DNS服务器地址2
 
-重启网络服务
+#重启网络服务
 service network restart

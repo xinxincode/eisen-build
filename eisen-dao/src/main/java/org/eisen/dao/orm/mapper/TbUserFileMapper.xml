@@ -1,46 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.eisen.dao.orm.mapper.TbUserFileMapper">
-  <!-- Author:eisen  2018-12-17 20:07:28 -->
-  <resultMap id="BaseResultMap" type="org.eisen.dao.orm.model.TbUserFile">
-    <id column="data_id" jdbcType="INTEGER" property="dataId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="file_id" jdbcType="INTEGER" property="fileId" />
-    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
-    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
-    <result column="file_date" jdbcType="TIMESTAMP" property="fileDate" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_user_file
-    where data_id = #{dataId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="org.eisen.dao.orm.model.TbUserFile">
-    insert into tb_user_file (data_id, user_id, file_id, 
-      file_name, file_path, file_date
-      )
-    values (#{dataId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{fileId,jdbcType=INTEGER}, 
-      #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{fileDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="org.eisen.dao.orm.model.TbUserFile">
-    update tb_user_file
-    set user_id = #{userId,jdbcType=INTEGER},
-      file_id = #{fileId,jdbcType=INTEGER},
-      file_name = #{fileName,jdbcType=VARCHAR},
-      file_path = #{filePath,jdbcType=VARCHAR},
-      file_date = #{fileDate,jdbcType=TIMESTAMP}
-    where data_id = #{dataId,jdbcType=INTEGER}
-  </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select data_id, user_id, file_id, file_name, file_path, file_date
-    from tb_user_file
-    where data_id = #{dataId,jdbcType=INTEGER}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select data_id, user_id, file_id, file_name, file_path, file_date
-    from tb_user_file
-  </select>
-  <!-- Author:eisen  2018-12-17 20:03:46 -->
+  <!-- Author:eisen  2018-12-18 22:31:53 -->
   <resultMap id="BaseResultMap" type="org.eisen.dao.orm.model.TbUserFile">
     <id column="data_id" jdbcType="INTEGER" property="dataId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
