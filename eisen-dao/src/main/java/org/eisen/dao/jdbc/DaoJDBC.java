@@ -11,7 +11,7 @@ import java.sql.*;
 public class DaoJDBC {
 
     public static void main(String[] args) throws Exception {
-//        new DaoJDBC().jdbc();
+        new DaoJDBC().jdbc();
         String s = DaoJDBC.class.getResource("/").getPath();
         String s1 = DaoJDBC.class.getResource("").getPath();
         System.out.println(s);
@@ -25,7 +25,7 @@ public class DaoJDBC {
 
     public void jdbc() throws SQLException {
 //        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.200.177:3306/eisendb", "eisen", "eisen");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/eisendb?serverTimezone=UTC", "eisen", "eisen");
         Statement stat = conn.createStatement();
         stat.execute("select * from tb_file_detail");
         ResultSet rs = stat.getResultSet();

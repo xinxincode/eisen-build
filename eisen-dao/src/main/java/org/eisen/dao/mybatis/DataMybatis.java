@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @Author Eisen
@@ -24,6 +25,9 @@ import java.util.List;
  **/
 public class DataMybatis {
     public static void main(String[] args) throws Exception {
+//        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        System.out.println(TimeZone.getDefault());
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         new DataMybatis().m();
     }
 
@@ -33,7 +37,7 @@ public class DataMybatis {
     }
 
     public void m() throws IOException {
-        DataSource dataSource = DefaultDataSourceFactory.getHikariDataSource("db/ds1.properties", "hikari");
+        DataSource dataSource = DefaultDataSourceFactory.getHikariDataSource("db/ds2.properties", "hikari");
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("development", transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
