@@ -25,7 +25,7 @@ import java.io.IOException;
 @org.springframework.context.annotation.Configuration
 public class GetMybatisSqlSessionFactory {
 
-    public SqlSessionFactory getDataSourceFactory(String id,String path, String prefix, String... packageNames) throws IOException {
+    public static SqlSessionFactory getDataSourceFactory(String id,String path, String prefix, String... packageNames) throws IOException {
         DataSource dataSource = DefaultDataSourceFactory.getHikariDataSource(path, prefix);
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment(id, transactionFactory, dataSource);
@@ -36,9 +36,16 @@ public class GetMybatisSqlSessionFactory {
         return new SqlSessionFactoryBuilder().build(configuration);
     }
 
+
+//    @Bean(name = "ssf1", value = "ssf1")
+    public SqlSessionFactory getSqlSessionFactory1() throws IOException {
+        SqlSessionFactory ssf1 = getDataSourceFactory("ssf1","db/ds1.properties", "hikari1", "org.eisen.dao.orm.mapper");
+        return ssf1;
+    }
+
     @Bean(name = "sst1",value = "sst1")
     public SqlSessionTemplate getSqlSessionTemplate() throws IOException {
-        SqlSessionFactory ssf1 = getDataSourceFactory("ssf1","db/ds2.properties", "hikari1", "org.eisen.dao.orm.mapper");
+        SqlSessionFactory ssf1 = getDataSourceFactory("ssf1","db/ds1.properties", "hikari1", "org.eisen.dao.orm.mapper");
         SqlSessionTemplate sst1 = new SqlSessionTemplate(ssf1, ExecutorType.SIMPLE);
         return sst1;
     }
