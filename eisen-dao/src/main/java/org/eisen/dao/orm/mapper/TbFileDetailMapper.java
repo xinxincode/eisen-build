@@ -1,9 +1,10 @@
 package org.eisen.dao.orm.mapper;
 
 import java.util.List;
+
 import org.eisen.dao.orm.model.TbFileDetail;
 
-public interface TbFileDetailMapper {
+public interface TbFileDetailMapper extends Mapper {
     int deleteByPrimaryKey(Integer fileId);
 
     int insert(TbFileDetail record);

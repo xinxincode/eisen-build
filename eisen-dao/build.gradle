@@ -33,6 +33,7 @@ dependencies {
             databaseDeps.dropwizard,
             databaseDeps.mybatis,
             databaseDeps.mybatisGenertor,
+            databaseDeps.mybatisSpring,
             dataFormat.gson,
     )
 

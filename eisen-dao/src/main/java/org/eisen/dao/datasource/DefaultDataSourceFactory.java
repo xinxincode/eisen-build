@@ -88,9 +88,5 @@ public class DefaultDataSourceFactory implements DataSourceFactory {
         return getHikariDataSource(map);
     }
 
-    public static void main(String[] args) throws Exception {
-        getHikariDataSource("db/ds1.properties", "hikari");
-    }
-
 
 }
