@@ -1,7 +1,8 @@
 package org.eisen.dao.orm.db2.mapper;
 
-import java.util.List;
 import org.eisen.dao.orm.db2.model.TbFileDetail;
+
+import java.util.List;
 
 public interface TbFileDetailMapper1 {
     int deleteByPrimaryKey(Integer fileId);

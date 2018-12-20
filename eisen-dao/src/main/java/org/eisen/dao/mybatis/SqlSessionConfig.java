@@ -29,7 +29,7 @@ public class SqlSessionConfig {
     }
 
     public SqlSessionTemplate getSqlSessionTemplate() throws IOException {
-        SqlSessionFactory ssf1 = getDataSourceFactory("ssf1", "db/ds1.properties", "hikari1");
+        SqlSessionFactory ssf1 = getDataSourceFactory("ssf1", "db/ds1.properties", "hikari");
         SqlSessionTemplate sst1 = new SqlSessionTemplate(ssf1, ExecutorType.SIMPLE);
 //        sst1.getMapper();
         sst1.flushStatements();

@@ -16,22 +16,21 @@ chmod -R 750 mysql
 #port=3306
 #socket=/usr/local/mysql/mysql.sock
 [mysqld]
-#port=3306
+port=3306
 #user=mysql
-#socket=/usr/local/mysql/mysql.sock
 basedir=/usr/local/mysql/base
 datadir=/usr/local/mysql/data
+socket=/usr/local/mysql/sock/mysql.sock
 log-error=/usr/local/mysql/log/log-error.log
 default-time_zone = '+8:00'
 
 #初始化
-bin/mysqld --defaults-file=/usr/local/mysql/my.cnf --initialize --user=mysql
+/usr/local/mysql/base/bin/mysqld --defaults-file=/usr/local/mysql/my.cnf --initialize --user=mysql
 #启动
 nohup /usr/local/mysql/base/bin/mysqld_safe  --defaults-file=/usr/local/mysql/my.cnf --user=mysql >/usr/local/mysql/log/mysql.log2>&1&
 
 #登陆 密码在log-error.log文件里
-base/bin/mysql -uroot -p
-
+/usr/local/mysql/base/bin/mysql -uroot -p
 #修改密码
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';
 #停止服务
@@ -74,4 +73,5 @@ show full processlist;
 #展示当前 前100条连接
 show processlist;
 
-
+#查看端口
+show global variables like 'port';
