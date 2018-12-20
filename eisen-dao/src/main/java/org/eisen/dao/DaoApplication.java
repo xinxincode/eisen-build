@@ -1,7 +1,5 @@
 package org.eisen.dao;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -16,7 +14,6 @@ import java.util.TimeZone;
  **/
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @PropertySource(value = {"classpath:application-dao.properties"})
-@MapperScan(basePackages = "org.eisen.dao.orm.mapper", sqlSessionTemplateRef = "sst1")
 public class DaoApplication {
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+8:00"));

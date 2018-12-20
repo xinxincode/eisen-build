@@ -1,10 +1,10 @@
-package org.eisen.dao.orm.model;
+package org.eisen.dao.orm.db1.model;
 
 import java.util.Date;
 
 /**
  * @Author: eisen
- * @DateTime: 2018-12-18 22:31:53
+ * @DateTime: 2018-12-20 15:11:39
  * 开发描述:
  *   文件存储明细表
  */

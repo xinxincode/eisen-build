@@ -1,7 +1,7 @@
-package org.eisen.dao.orm.mapper;
+package org.eisen.dao.orm.db1.mapper;
 
 import java.util.List;
-import org.eisen.dao.orm.model.TbUserInfo;
+import org.eisen.dao.orm.db1.model.TbUserInfo;
 
 public interface TbUserInfoMapper {
     int deleteByPrimaryKey(Integer userId);

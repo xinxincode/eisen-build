@@ -1,4 +1,4 @@
-package org.eisen.dao.mybatis.generator;
+package org.eisen.dao.config.mybatis.generator;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
@@ -21,7 +21,7 @@ import java.util.List;
 public class MybatisGenerator {
     public static void main(String[] args) throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException {
         List<String> warnings = new ArrayList<String>();
-        InputStream in = MybatisGenerator.class.getClassLoader().getResourceAsStream("org/eisen/dao/mybatis/generator/generatorConfig.xml");
+        InputStream in = MybatisGenerator.class.getClassLoader().getResourceAsStream("org/eisen/dao/config/mybatis/generator/generatorConfig.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(in);
         DefaultShellCallback callback = new DefaultShellCallback(true);

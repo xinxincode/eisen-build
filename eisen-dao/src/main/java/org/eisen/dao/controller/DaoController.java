@@ -1,8 +1,7 @@
 package org.eisen.dao.controller;
 
-import org.eisen.dao.orm.mapper.TbFileDetailMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,13 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class DaoController {
 
     @Autowired
-    TbFileDetailMapper tbFileDetailMapper;
+    org.eisen.dao.orm.db1.mapper.TbFileDetailMapper tbFileDetailMapper1;
+    @Autowired
+    org.eisen.dao.orm.db2.mapper.TbFileDetailMapper1 tbFileDetailMapper2;
 
-    @RequestMapping("/t")
-    public Object tbean() {
-//        TbFileDetailMapper tbFileDetailMapper = (TbFileDetailMapper) ApplicationContextProvider.applicationContext.getBean("TbFileDetailMapper");
-        return tbFileDetailMapper.selectAll();
+    @RequestMapping("/t1")
+    public Object tbean1() {
+        return tbFileDetailMapper1.selectAll();
     }
 
+    @RequestMapping("/t2")
+    public Object tbean2() {
+        return tbFileDetailMapper2.selectAll();
+    }
 
 }

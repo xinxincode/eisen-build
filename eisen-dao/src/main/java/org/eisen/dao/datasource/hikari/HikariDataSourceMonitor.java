@@ -1,4 +1,4 @@
-package org.eisen.dao.datasource;
+package org.eisen.dao.datasource.hikari;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
@@ -13,7 +13,7 @@ import com.zaxxer.hikari.metrics.dropwizard.CodahaleMetricsTrackerFactory;
  * @Date 2018/12/17 14:57
  * @Description:
  **/
-public class DataSourceMonitor {
+public class HikariDataSourceMonitor {
 
     /**
      * 连接池监控
