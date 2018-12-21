@@ -24,8 +24,10 @@ sourceCompatibility = 1.8
 
 
 dependencies {
-    testCompile(testDeps.junit)
-    compile(springDeps.springBootStarterWeb)
+
+    compile (
+        springDeps.springBoot,
+    )
 
 //    compile(
 //            'dom4j:dom4j:1.6.1',

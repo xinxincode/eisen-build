@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <properties resource="db/ds1.properties"/>
+
+    <context id="db" targetRuntime="MyBatis3Simple">
+
+        <commentGenerator type="org.eisen.dal.config.mybatis.generator.EisenCommentGenerator">
+            <!--<property name="suppressAllComments" value="false"/>-->
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="${hikari.url}"
+                        userId="eisen"
+                        password="eisen">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="org.eisen.dal.orm.db1.model"
+                            targetProject="D:\Projects\eisen-build\eisen-dao\src\main\java"/>
+        <sqlMapGenerator targetPackage="org.eisen.dal.orm.db1.mapper"
+                         targetProject="D:\Projects\eisen-build\eisen-dao\src\main\java"/>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="org.eisen.dal.orm.db1.mapper"
+                             targetProject="D:\Projects\eisen-build\eisen-dao\src\main\java"/>
+
+        <table schema="eisendb" tableName="tb_file_detail" />
+        <table schema="eisendb" tableName="tb_user_info" />
+        <table schema="eisendb" tableName="tb_user_file" />
+
+    </context>
+</generatorConfiguration>

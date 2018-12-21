@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.eisen.dal.orm.db2.mapper.TbUserInfoMapper">
+  <!-- Author:eisen  2018-12-21 10:54:37 -->
+  <resultMap id="BaseResultMap" type="org.eisen.dal.orm.db2.model.TbUserInfo">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="signin_name" jdbcType="VARCHAR" property="signinName" />
+    <result column="signin_passwdmd5" jdbcType="VARCHAR" property="signinPasswdmd5" />
+    <result column="signin_passwdaes" jdbcType="VARCHAR" property="signinPasswdaes" />
+    <result column="passwd_lastdate" jdbcType="TIMESTAMP" property="passwdLastdate" />
+    <result column="signup_date" jdbcType="TIMESTAMP" property="signupDate" />
+    <result column="signin_lastdate" jdbcType="TIMESTAMP" property="signinLastdate" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="user_mphone" jdbcType="VARCHAR" property="userMphone" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_sex" jdbcType="BIT" property="userSex" />
+    <result column="head_portrait" jdbcType="INTEGER" property="headPortrait" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_user_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.eisen.dal.orm.db2.model.TbUserInfo">
+    insert into tb_user_info (user_id, signin_name, signin_passwdmd5, 
+      signin_passwdaes, passwd_lastdate, signup_date, 
+      signin_lastdate, nick_name, user_email, 
+      user_mphone, user_address, user_sex, 
+      head_portrait)
+    values (#{userId,jdbcType=INTEGER}, #{signinName,jdbcType=VARCHAR}, #{signinPasswdmd5,jdbcType=VARCHAR}, 
+      #{signinPasswdaes,jdbcType=VARCHAR}, #{passwdLastdate,jdbcType=TIMESTAMP}, #{signupDate,jdbcType=TIMESTAMP}, 
+      #{signinLastdate,jdbcType=TIMESTAMP}, #{nickName,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, 
+      #{userMphone,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{userSex,jdbcType=BIT}, 
+      #{headPortrait,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.eisen.dal.orm.db2.model.TbUserInfo">
+    update tb_user_info
+    set signin_name = #{signinName,jdbcType=VARCHAR},
+      signin_passwdmd5 = #{signinPasswdmd5,jdbcType=VARCHAR},
+      signin_passwdaes = #{signinPasswdaes,jdbcType=VARCHAR},
+      passwd_lastdate = #{passwdLastdate,jdbcType=TIMESTAMP},
+      signup_date = #{signupDate,jdbcType=TIMESTAMP},
+      signin_lastdate = #{signinLastdate,jdbcType=TIMESTAMP},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_mphone = #{userMphone,jdbcType=VARCHAR},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=BIT},
+      head_portrait = #{headPortrait,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select user_id, signin_name, signin_passwdmd5, signin_passwdaes, passwd_lastdate, 
+    signup_date, signin_lastdate, nick_name, user_email, user_mphone, user_address, user_sex, 
+    head_portrait
+    from tb_user_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select user_id, signin_name, signin_passwdmd5, signin_passwdaes, passwd_lastdate, 
+    signup_date, signin_lastdate, nick_name, user_email, user_mphone, user_address, user_sex, 
+    head_portrait
+    from tb_user_info
+  </select>
+</mapper>
