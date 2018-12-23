@@ -280,7 +280,7 @@ public class HikariDataSourceBuilder {
      * @param kv
      * @return
      */
-    static HikariDataSource build(Map<String, String> kv) {
+    public static HikariDataSource build(Map<String, String> kv) {
         HikariDataSourceBuilder hdsb = new HikariDataSourceBuilder().
                 url(kv.get("url")).
                 driver(kv.get("driver")).

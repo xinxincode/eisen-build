@@ -1,31 +1,24 @@
 package org.eisen.dal.controller;
 
 
+import org.eisen.dal.configuration.MybatisInit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DaoController {
+public class DalController {
 
     @Autowired
     org.eisen.dal.orm.db1.mapper.TbFileDetailMapper tbFileDetailMapper1;
-    @Autowired
-    org.eisen.dal.orm.db2.mapper.TbFileDetailMapper tbFileDetailMapper2;
 
+
+    @Transactional
     @RequestMapping("/t1")
-    public Object tbean1() {
+    public Object tbean1() throws ClassNotFoundException {
+        System.out.println(MybatisInit.getMapperDBId(tbFileDetailMapper1.getClass()));
         return tbFileDetailMapper1.selectAll();
-    }
-
-    @RequestMapping("/t2")
-    public Object tbean2() {
-        return tbFileDetailMapper2.selectAll();
-    }
-
-    @RequestMapping("/t3")
-    public Object t3() {
-        return "";
     }
 
 }

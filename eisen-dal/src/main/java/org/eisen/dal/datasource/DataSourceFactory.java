@@ -1,11 +1,12 @@
 package org.eisen.dal.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.eisen.bios.utils.StringUtils;
 import org.eisen.dal.datasource.hikari.HikariDataSourceBuilder;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 连接池工厂
@@ -14,38 +15,35 @@ public class DataSourceFactory {
 
     /**
      * 根据配置文件创建对应类型的连接池
-     * @param path 配置文件路径
-     * @param prefix 配置文件内容数据库连接池前缀
-     * @param clz 要创建的连接池类型
+     *
+     * @param map 配置内容
      * @return
      */
-    public static DataSource getDataSource(String path, String prefix, Class clz) {
+    public static DataSource getDataSource(Map<String, String> map) {
         try {
-            if (path == null || path.equals("") || clz == null) {
+            if (map == null || map.isEmpty()) {
                 throw new Exception("连接配置为空");
             }
+            String dataSourceClass = map.get("dataSourceClass");
+            if (StringUtils.isEmpty(dataSourceClass)) {
+                throw new RuntimeException("dataSourceClass属性不能为空");
+            }
+            Class clz = Class.forName(dataSourceClass);
             Method[] methods = DataSourceFactory.class.getMethods();
             for (Method method : methods) {
                 if (clz.equals(method.getReturnType())) {
-                    return (DataSource) method.invoke(null, path, prefix);
+                    return (DataSource) method.invoke(null, map);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return null;
+        throw new RuntimeException("未找到指定连接池类型");
     }
 
-
-    public static HikariDataSource getHikariDataSource(String path, String prefix) {
-        try {
-            return HikariDataSourceBuilder.build(path, prefix);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    public static HikariDataSource getHikariDataSource(Map<String, String> map) {
+        return HikariDataSourceBuilder.build(map);
     }
-
 
 }

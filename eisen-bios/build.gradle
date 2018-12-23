@@ -1,21 +1,10 @@
-buildscript {
-    ext {
-        springBootVersion = '2.1.1.RELEASE'
-    }
-    repositories {
-        mavenLocal()
-//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-//        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
 
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+//plugins{
+//    id 'java'
+//}
+apply plugin: 'maven'
 apply plugin: 'java'
+
 apply from: rootProject.file('gradle/base.gradle')
 
 group 'org.eisen'
@@ -24,11 +13,6 @@ sourceCompatibility = 1.8
 
 
 dependencies {
-
-    compile (
-        springDeps.springBoot,
-    )
-
 //    compile(
 //            'dom4j:dom4j:1.6.1',
 //            'com.google.code.gson:gson:2.8.5',

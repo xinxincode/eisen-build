@@ -8,7 +8,7 @@
 
     <context id="db" targetRuntime="MyBatis3Simple">
 
-        <commentGenerator type="org.eisen.dal.config.mybatis.generator.EisenCommentGenerator">
+        <commentGenerator type="org.eisen.dal.mybatis.generator.EisenCommentGenerator">
             <!--<property name="suppressAllComments" value="false"/>-->
             <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
             <property name="addRemarkComments" value="true"/>

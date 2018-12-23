@@ -1,15 +1,43 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.1.1.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
+
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply from: rootProject.file('gradle/base.gradle')
 
 group 'org.eisen'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-repositories {
-    mavenLocal()
-}
 
 dependencies {
+
+    compile(
+            project(':eisen-bios')
+    )
+
+    compile(
+            springDeps.springBootStarterWeb,
+            databaseDeps.mysqlConnectorJava,
+            databaseDeps.HikariCP,
+            databaseDeps.dropwizard,
+            databaseDeps.mybatis,
+            databaseDeps.mybatisGenertor,
+            databaseDeps.mybatisSpring,
+            dataFormat.gson,
+    )
 }

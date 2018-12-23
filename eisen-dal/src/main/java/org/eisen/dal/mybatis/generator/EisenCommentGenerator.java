@@ -1,4 +1,4 @@
-package org.eisen.dal.config.mybatis.generator;
+package org.eisen.dal.mybatis.generator;
 
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
