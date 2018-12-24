@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 import com.zaxxer.hikari.metrics.dropwizard.CodahaleMetricsTrackerFactory;
+import org.eisen.dal.configuration.DalException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -177,12 +178,12 @@ public class HikariDataSourceBuilder {
     private void ssNotNull(String... ss) {
 
         if (ss == null || ss.length == 0) {
-            throw new RuntimeException("This value can't be null");
+            throw new DalException("This value can't be null");
         }
 
         for (String s : ss) {
             if (s == null || s.equals("")) {
-                throw new RuntimeException("This value can't be null");
+                throw new DalException("This value can't be null");
             }
         }
 

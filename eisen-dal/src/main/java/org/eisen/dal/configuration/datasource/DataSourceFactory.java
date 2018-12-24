@@ -2,6 +2,7 @@ package org.eisen.dal.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.eisen.bios.utils.StringUtils;
+import org.eisen.dal.configuration.DalException;
 import org.eisen.dal.datasource.hikari.HikariDataSourceBuilder;
 
 import javax.sql.DataSource;
@@ -26,7 +27,7 @@ public class DataSourceFactory {
             }
             String dataSourceClass = map.get("dataSourceClass");
             if (StringUtils.isEmpty(dataSourceClass)) {
-                throw new RuntimeException("dataSourceClass属性不能为空");
+                throw new DalException("dataSourceClass属性不能为空");
             }
             Class clz = Class.forName(dataSourceClass);
             Method[] methods = DataSourceFactory.class.getMethods();
@@ -37,9 +38,9 @@ public class DataSourceFactory {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new DalException(e);
         }
-        throw new RuntimeException("未找到指定连接池类型");
+        throw new DalException("未找到指定连接池类型");
     }
 
     public static HikariDataSource getHikariDataSource(Map<String, String> map) {

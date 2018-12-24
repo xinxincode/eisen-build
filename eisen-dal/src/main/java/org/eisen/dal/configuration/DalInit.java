@@ -32,10 +32,11 @@ import java.util.Set;
 public class MybatisInit {
 
     public static final Map<String, DataSource> dataSourceFactoryManagerMap = new HashMap<>();
-    public static final Map<String, SqlSessionFactory> sqlSessionFactoryManagerMap = new HashMap<String, SqlSessionFactory>();
-    public static final Map<String, TransactionFactory> transactionFactoryManagerMap = new HashMap<String, TransactionFactory>();
-    public static final Map<String, SqlSessionTemplate> sqlSessionTemplateManagerMap = new HashMap<String, SqlSessionTemplate>();
-    public static final Map<String, DataSourceTransactionManager> dataSourceTransactionManagerMap = new HashMap<String, DataSourceTransactionManager>();
+    public static final Map<String, SqlSessionFactory> sqlSessionFactoryManagerMap = new HashMap<>();
+    public static final Map<String, TransactionFactory> transactionFactoryManagerMap = new HashMap<>();
+    public static final Map<String, SqlSessionTemplate> sqlSessionTemplateManagerMap = new HashMap<>();
+    public static final Map<String, DataSourceTransactionManager> dataSourceTransactionManagerMap = new HashMap<>();
+    public static final Map<String, Map<String, Object>> mapperManagerMap = new HashMap<>();
 
 
     /**
@@ -43,10 +44,29 @@ public class MybatisInit {
      *
      * @throws ClassNotFoundException
      */
-    public static String getMapperDBId(Class clz) throws ClassNotFoundException {
-        if (clz == null) {
-            throw new RuntimeException("传入类型不能为空");
+    public static String getMapperDBId(Object mapper) {
+
+        if (mapper == null) {
+            return null;
         }
+        Set<String> keys = mapperManagerMap.keySet();
+        for (String key : keys) {
+            Map<String, Object> map = mapperManagerMap.get(key);
+            if (map.containsValue(mapper)) {
+                return key;
+            }
+        }
+        return null;
+
+         /* 另一种获取mapper id的方式
+        if (clz == null) {
+            throw new DalException("传入类型不能为空");
+        }
+        Class[] clzs = clz.getInterfaces();
+        if (clzs == null || clzs.length == 0) {
+            throw new ClassNotFoundException("请传入正确的mapper class");
+        }
+        clz = clzs[0];
         Set<String> keys = sqlSessionTemplateManagerMap.keySet();
         Configuration conf;
         for (String key : keys) {
@@ -56,16 +76,7 @@ public class MybatisInit {
             }
         }
         throw new ClassNotFoundException("未找到对应mapper id");
-        /* 另一种获取mapper id的方式
-         * 考虑如果以后多数据源共享一个mapper目录可能会用到吧 好像没太有必要 不共享就行
-        Set<String> keys = mapperManagerMap.keySet();
-        for (String key : keys) {
-            if (mapperManagerMap.get(key).contains(obj)) {
-                return key;
-            }
-        }
-        throw new ClassNotFoundException("未找到对应mapper id");
-        * */
+         * */
 
     }
 
@@ -126,7 +137,7 @@ public class MybatisInit {
         Map props = ReadFile.readProjectProps(path, prefix);
         String id = (String) props.get("id");
         if (dataSourceFactoryManagerMap.containsKey(id)) {
-            throw new RuntimeException("已存在此数据库id:" + id);
+            throw new DalException("已存在此数据库id:" + id);
         }
         if (StringUtils.isEmpty(id)) {
             id = path.replace("/", ".").replace("\\", ".") + (StringUtils.isEmpty(prefix) ? "" : "." + prefix);
@@ -145,7 +156,7 @@ public class MybatisInit {
         //处理mapper包路径告诉mybatis扫描哪个包下的mapper
         String packageNames = (String) props.get("mapper-locations");
         if (StringUtils.isEmpty(packageNames)) {
-            throw new RuntimeException("请指定mapper包名 多个以 , 隔开 如 mapper-locations=org.mapper1,org.mapper2");
+            throw new DalException("请指定mapper包名 多个以 , 隔开 如 mapper-locations=org.mapper1,org.mapper2");
         }
         String[] ps = packageNames.split(",");
 
@@ -173,18 +184,24 @@ public class MybatisInit {
         Collection<Class<?>> cc = mr.getMappers();
         //存放所有的mapper
         if (cc != null) {
+            Map<String, Object> mapperMap = new HashMap<>();
+            Object mapper;
             for (Class<?> clz : cc) {
+                mapper = sst.getMapper(clz);
                 //向spring容器中注册单例
-                ApplicationContextProvider.defaultListableBeanFactory.registerSingleton(clz.getName(), sst.getMapper(clz));
+                ApplicationContextProvider.defaultListableBeanFactory.registerSingleton(clz.getName(), mapper);
+                mapperMap.put(clz.getName(), mapper);
             }
+            //将mapper存入静态map方便管理
+            mapperManagerMap.put(id, mapperMap);
         }
-
         //放入静态map中方便以后用
         dataSourceFactoryManagerMap.put(id, ds);
         transactionFactoryManagerMap.put(id, smtf);
         sqlSessionFactoryManagerMap.put(id, ssf);
         sqlSessionTemplateManagerMap.put(id, sst);
         dataSourceTransactionManagerMap.put(id, dtm);
+
     }
 
 
