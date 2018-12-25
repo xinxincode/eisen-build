@@ -62,10 +62,5 @@ public class ReadFile {
         return readProjectProps(readProjectProps(path), prefix);
     }
 
-    public static void main(String[] args) throws IOException {
-        Properties props = readProjectProps("path/path2/ds1.properties", "hikari");
-        System.out.println(props);
-    }
-
 
 }

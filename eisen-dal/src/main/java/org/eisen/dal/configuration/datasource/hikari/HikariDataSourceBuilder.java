@@ -1,4 +1,4 @@
-package org.eisen.dal.datasource.hikari;
+package org.eisen.dal.configuration.datasource.hikari;
 
 
 import com.codahale.metrics.MetricRegistry;

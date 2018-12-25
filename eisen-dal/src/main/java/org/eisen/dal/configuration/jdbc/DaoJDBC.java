@@ -1,4 +1,4 @@
-package org.eisen.dal.jdbc;
+package org.eisen.dal.configuration.jdbc;
 
 import java.io.File;
 import java.sql.*;

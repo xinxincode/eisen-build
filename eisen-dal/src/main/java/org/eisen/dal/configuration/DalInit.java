@@ -9,13 +9,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.eisen.bios.fileopreate.ReadFile;
 import org.eisen.bios.utils.StringUtils;
-import org.eisen.dal.datasource.DataSourceFactory;
+import org.eisen.bios.utils.UrlUtils;
+import org.eisen.dal.configuration.datasource.DataSourceFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -29,7 +27,7 @@ import java.util.Set;
  * @Date 2018/12/21 20:44
  * @Description:
  **/
-public class MybatisInit {
+public class DalInit {
 
     public static final Map<String, DataSource> dataSourceFactoryManagerMap = new HashMap<>();
     public static final Map<String, SqlSessionFactory> sqlSessionFactoryManagerMap = new HashMap<>();
@@ -41,8 +39,6 @@ public class MybatisInit {
 
     /**
      * 传入一个mapper 返回该mapper对应的id
-     *
-     * @throws ClassNotFoundException
      */
     public static String getMapperDBId(Object mapper) {
 
@@ -57,62 +53,52 @@ public class MybatisInit {
             }
         }
         return null;
-
-         /* 另一种获取mapper id的方式
-        if (clz == null) {
-            throw new DalException("传入类型不能为空");
-        }
-        Class[] clzs = clz.getInterfaces();
-        if (clzs == null || clzs.length == 0) {
-            throw new ClassNotFoundException("请传入正确的mapper class");
-        }
-        clz = clzs[0];
-        Set<String> keys = sqlSessionTemplateManagerMap.keySet();
-        Configuration conf;
-        for (String key : keys) {
-            conf = sqlSessionFactoryManagerMap.get(key).getConfiguration();
-            if (conf.getMapperRegistry().hasMapper(clz)) {
-                return conf.getEnvironment().getId();
-            }
-        }
-        throw new ClassNotFoundException("未找到对应mapper id");
-         * */
-
-    }
-
-
-    public TransactionStatus transaction(String id) {
-        //1.获取事务控制管理器
-        DataSourceTransactionManager transactionManager = dataSourceTransactionManagerMap.get(id);
-        //2.获取事务定义
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        //3.设置事务隔离级别，开启新事务
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        //4.获得事务状态
-        TransactionStatus status = transactionManager.getTransaction(def);
-        return status;
     }
 
 
     /**
      * @param em 格式如下:
      *           文件路径?前缀 多个以 , 分隔
-     *           path?prefeix,path
+     *           path/db1.txt?prefix=hikari&id=db1,path/db.properties
+     *           可以在路径后拼参数 若存在同名参数则会覆盖配置文件中的参数
+     *           prefix为获取配置文件指定前缀的参数(key为去掉前缀后的key) 路径拼接的参数则不会去掉前缀
+     *
+     *           id为配置文件中的 'id' 的值 id不可重复
+     *           若id为空则生成一个默认的id 为配置文件路径('/'被替换为'.')+.前缀
+     *           1.如果没指定数据库poolname 则poolname为这个id
+     *           2.此id为mybatis的环境id
+     *           3.此id为所有此类静态map的key
      * @throws IOException
      */
     public synchronized static void initMybatis(String em) throws IOException {
-        String[] ms = em.trim().split(",");
-        for (String s : ms) {
-            if (StringUtils.isEmpty(s)) {
+        String[] urls = em.trim().split(",");
+        for (String url : urls) {
+            if (StringUtils.isEmpty(url)) {
                 continue;
             }
-            String[] pathPrefix = s.trim().split("\\?");
-            String path = pathPrefix[0];
-            String prefix = "";
-            if (pathPrefix.length >= 2) {
-                prefix = pathPrefix[1];
+            String path = UrlUtils.getDomain(url);
+            Map<String, String> params = UrlUtils.getParams(url);
+            String prefix = null;
+            boolean isNotNull = params != null;
+            if (isNotNull) {
+                prefix = params.get("prefix");
             }
-            initMybatis(path, prefix);
+            Map props = ReadFile.readProjectProps(path, prefix);
+            if (isNotNull) {
+                props.putAll(params);
+            }
+            String id = (String) props.get("id");
+            //如果id为空默认指定一个id
+            if (StringUtils.isEmpty(id)) {
+                id = path.replace("/", ".").replace("\\", ".") + (StringUtils.isEmpty(prefix) ? "" : "." + prefix);
+            }
+            if (dataSourceFactoryManagerMap.containsKey(id)) {
+                throw new DalException("已存在此数据库id:" + id);
+            }
+            if (!props.containsKey("poolname")) {
+                props.put("poolname", id);
+            }
+            initMybatis(props);
         }
     }
 
@@ -122,29 +108,11 @@ public class MybatisInit {
      * 2.会初始化myabts sqlSession factory等bean
      * 3.初始化mapper并交给spring容器 单例管理
      *
-     * @param path
-     * @param prefix
+     * @param props
      * @throws IOException
      */
-    public synchronized static void initMybatis(String path, String prefix) throws IOException {
-        /*
-         * id为配置文件中的 'id' 的值 id不可重复
-         * 若id为空则生成一个默认的id 为配置文件路径('/'被替换为'.')+.前缀
-         * 1.如果没指定数据库poolname 则poolname为这个id
-         * 2.此id为mybatis的环境id
-         * 3.此id为所有此类静态map的key
-         */
-        Map props = ReadFile.readProjectProps(path, prefix);
-        String id = (String) props.get("id");
-        if (dataSourceFactoryManagerMap.containsKey(id)) {
-            throw new DalException("已存在此数据库id:" + id);
-        }
-        if (StringUtils.isEmpty(id)) {
-            id = path.replace("/", ".").replace("\\", ".") + (StringUtils.isEmpty(prefix) ? "" : "." + prefix);
-        }
-        if (!props.containsKey("poolname")) {
-            props.put("poolname", id);
-        }
+    public synchronized static void initMybatis(Map<String, String> props) throws IOException {
+        String id = props.get("id");
         //获取数据库连接池
         DataSource ds = DataSourceFactory.getDataSource(props);
         //获取一个spring的数据库连接池的事务管理

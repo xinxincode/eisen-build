@@ -12,9 +12,8 @@ public class DemoInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return "success";
+        return method.getName();
     }
-
 
 
 }

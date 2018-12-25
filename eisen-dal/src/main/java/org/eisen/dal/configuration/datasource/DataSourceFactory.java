@@ -1,9 +1,9 @@
-package org.eisen.dal.datasource;
+package org.eisen.dal.configuration.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.eisen.bios.utils.StringUtils;
 import org.eisen.dal.configuration.DalException;
-import org.eisen.dal.datasource.hikari.HikariDataSourceBuilder;
+import org.eisen.dal.configuration.datasource.hikari.HikariDataSourceBuilder;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;

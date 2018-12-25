@@ -30,7 +30,7 @@ public class ApplicationInit {
             System.err.println("未指定datasource mybatis未初始化");
             return;
         }
-        MybatisInit.initMybatis(em);
+        DalInit.initMybatis(em);
     }
 
 

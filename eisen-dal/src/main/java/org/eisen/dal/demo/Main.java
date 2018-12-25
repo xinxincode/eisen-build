@@ -11,7 +11,9 @@ public class Main {
     public static void main(String[] args) {
         DemoInterface demoInterface = (DemoInterface) Proxy.newProxyInstance(DemoInterface.class.getClassLoader(), new Class[]{DemoInterface.class}, new DemoInvocationHandler());
         String s = demoInterface.say();
-        System.out.println(demoInterface.getClass().getInterfaces().getClass().getName());
         System.out.println(s);
+
+        Class[] clz = demoInterface.getClass().getInterfaces();
+        System.out.println(clz[1].getName());
     }
 }
