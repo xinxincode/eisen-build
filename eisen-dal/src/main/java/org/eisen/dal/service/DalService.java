@@ -1,19 +1,14 @@
 package org.eisen.dal.service;
 
+import org.apache.ibatis.session.SqlSession;
 import org.eisen.dal.configuration.DalInit;
+import org.eisen.dal.configuration.DalTransaction;
 import org.eisen.dal.orm.db1.mapper.TbFileDetailMapper;
 import org.eisen.dal.orm.db1.model.TbFileDetail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
-
-import static org.eisen.dal.configuration.DalInit.dataSourceTransactionManagerMap;
 
 /**
  * @Author Eisen
@@ -29,25 +24,13 @@ public class DalService {
     org.eisen.dal.orm.db2.mapper.TbFileDetailMapper tbFileDetailMapper2;
 
 
-    @Transactional(transactionManager = "db1")
+    //    @Transactional(transactionManager = "db1")
     public String Transactional() {
 
-        DataSourceTransactionManager transactionManager;
-        TransactionStatus status;
-        DefaultTransactionDefinition def;
+        SqlSession sqlSession = DalInit.sqlSessionFactoryManagerMap.get(DalInit.getMapperDBId(tbFileDetailMapper2)).openSession(false);
+        tbFileDetailMapper2 = sqlSession.getMapper(org.eisen.dal.orm.db2.mapper.TbFileDetailMapper.class);
 
-
-        //1.事务控制管理器
-        transactionManager = dataSourceTransactionManagerMap.get(DalInit.getMapperDBId(tbFileDetailMapper1));
-        //2.定义事务隔离级别，开启新事务
-        def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        //3.事务状态
-        status = transactionManager.getTransaction(def);
-
-
-
-
-
+        DalTransaction transaction1 = new DalTransaction(tbFileDetailMapper1);
 
         List<TbFileDetail> list1 = tbFileDetailMapper1.selectAll();
         List<org.eisen.dal.orm.db2.model.TbFileDetail> list2 = tbFileDetailMapper2.selectAll();
@@ -55,25 +38,23 @@ public class DalService {
         org.eisen.dal.orm.db2.model.TbFileDetail tb2 = list2.get(0);
 
 
-        tb1.setFileName("测试事务11");
-        tb2.setFileName("测试事务11");
+        tb1.setFileName("测试事务1");
+        tb2.setFileName("测试事务1");
         tbFileDetailMapper1.updateByPrimaryKey(tb1);
         tbFileDetailMapper2.updateByPrimaryKey(tb2);
-        Object obj1 = status.createSavepoint();
 
-        tb1.setFileName("测试事务22");
-        tb2.setFileName("测试事务22");
+        Object point1 = transaction1.createSavepoint();
+        sqlSession.rollback(true);
+        sqlSession.commit();
+        sqlSession.close();
+        tb1.setFileName("测试事务2");
+        tb2.setFileName("测试事务2");
         tbFileDetailMapper1.updateByPrimaryKey(tb1);
         tbFileDetailMapper2.updateByPrimaryKey(tb2);
-        System.out.println(status.isCompleted());
 
-        status.rollbackToSavepoint(obj1);
-        System.out.println(status.isCompleted());
-        transactionManager.commit(status);
+        transaction1.rollbackToSavepoint(point1);
+        transaction1.commit();
 
-        if (1 == 1) {
-//            throw new DalException("事务出错");
-        }
         return null;
     }
 

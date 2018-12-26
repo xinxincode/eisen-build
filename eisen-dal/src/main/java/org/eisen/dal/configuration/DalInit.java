@@ -4,8 +4,8 @@ import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.eisen.bios.fileopreate.ReadFile;
 import org.eisen.bios.utils.StringUtils;
@@ -30,7 +30,7 @@ import java.util.Set;
 public class DalInit {
 
     public static final Map<String, DataSource> dataSourceFactoryManagerMap = new HashMap<>();
-    public static final Map<String, SqlSessionFactory> sqlSessionFactoryManagerMap = new HashMap<>();
+    public static final Map<String, DefaultSqlSessionFactory> sqlSessionFactoryManagerMap = new HashMap<>();
     public static final Map<String, TransactionFactory> transactionFactoryManagerMap = new HashMap<>();
     public static final Map<String, SqlSessionTemplate> sqlSessionTemplateManagerMap = new HashMap<>();
     public static final Map<String, DataSourceTransactionManager> dataSourceTransactionManagerMap = new HashMap<>();
@@ -133,10 +133,9 @@ public class DalInit {
                 continue;
             }
             conf.addMappers(s);
-
         }
         //通过SqlSessionFactoryBuilder生成SqlSession工厂
-        SqlSessionFactory ssf = new SqlSessionFactoryBuilder().build(conf);
+        DefaultSqlSessionFactory ssf = (DefaultSqlSessionFactory) new SqlSessionFactoryBuilder().build(conf);
         //通过配置文件读取SqlSessionTemplate的ExecutorType执行方式 默认为REUSE
         ExecutorType et = ExecutorType.REUSE;
         for (ExecutorType e : ExecutorType.values()) {

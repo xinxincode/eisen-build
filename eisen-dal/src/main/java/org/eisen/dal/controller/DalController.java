@@ -16,14 +16,21 @@ public class DalController {
     DalService dalService;
 
     @RequestMapping("/t1")
-    public Object tbean1()   {
+    public Object tbean1() {
+
         return tbFileDetailMapper1.selectAll();
     }
 
     @RequestMapping("/t2")
-    public Object tbean2()  {
+    public Object tbean2() throws InterruptedException {
         dalService.Transactional();
         return tbFileDetailMapper1.selectAll();
     }
+    @RequestMapping("/t3")
+    public Object tbean3() {
+        dalService.Transactional();
+        return tbFileDetailMapper1.selectAll();
+    }
+
 
 }
