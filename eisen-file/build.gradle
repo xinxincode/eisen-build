@@ -27,4 +27,5 @@ sourceCompatibility = 1.8
 
 dependencies {
     compile(springDeps.springBootStarterWeb)
+    compile(commons.fileupload)
 }
