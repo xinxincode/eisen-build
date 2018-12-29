@@ -1,7 +1,10 @@
-package org.eisen.file.controller;
+package org.eisen.dal.controller;
 
+import org.eisen.bios.fileopreate.CheckFile;
 import org.eisen.bios.fileopreate.CopyFile;
-import org.eisen.file.component.FileCheck;
+import org.eisen.dal.orm.db1.mapper.TbFileDetailMapper;
+import org.eisen.dal.orm.db1.model.TbFileDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,7 +12,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 
@@ -29,6 +35,9 @@ public class FileController {
             file.mkdirs();
         }
     }
+
+    @Autowired
+    TbFileDetailMapper tbFileDetailMapper;
 
     @RequestMapping("/upload")
     public Object upload(HttpServletRequest request) throws IOException {
@@ -79,7 +88,7 @@ public class FileController {
                 continue;
             }
             FileInputStream in = (FileInputStream) mFile.getInputStream();
-            String sha_512 = FileCheck.getCheckValue(in, FileCheck.SHA_512);
+            String sha_512 = CheckFile.getCheckValue(in, CheckFile.SHA_512);
             String dirPath = filePath + sha_512.substring(0, 4) + "/" + sha_512.substring(4, 8) + "/";
             String path = dirPath + sha_512;
             File dir = new File(dirPath);
@@ -91,14 +100,13 @@ public class FileController {
                 file.delete();
             }
             CopyFile.copyFile(in, new FileOutputStream(file));
+            TbFileDetail tbFileDetail = new TbFileDetail();
+            tbFileDetail.setFileName(sha_512);
+            tbFileDetail.setSha512(sha_512);
+            tbFileDetail.setFilePath(path);
+            tbFileDetailMapper.insert(tbFileDetail);
         }
         return 1;
-    }
-
-    public static void main(String[] args) {
-        String s = "012345678";
-        System.out.println(s.substring(0, 4));
-        System.out.println(s.substring(4, 8));
     }
 
 

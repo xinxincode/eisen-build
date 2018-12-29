@@ -41,6 +41,8 @@ dependencies {
             databaseDeps.mybatisSpring,
             dataFormat.gson,
     )
+    compile(commons.fileupload)
+
 
 //    compile(
 

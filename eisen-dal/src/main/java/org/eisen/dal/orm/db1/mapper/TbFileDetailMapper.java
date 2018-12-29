@@ -1,7 +1,8 @@
 package org.eisen.dal.orm.db1.mapper;
 
-import java.util.List;
 import org.eisen.dal.orm.db1.model.TbFileDetail;
+
+import java.util.List;
 
 public interface TbFileDetailMapper {
     int deleteByPrimaryKey(Integer fileId);

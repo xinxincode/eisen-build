@@ -26,6 +26,7 @@ sourceCompatibility = 1.8
 
 
 dependencies {
+    compile(project(':eisen-bios'))
     compile(springDeps.springBootStarterWeb)
     compile(commons.fileupload)
 }
