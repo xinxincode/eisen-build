@@ -31,4 +31,37 @@ public class DemoMD5 {
         return y ^ (x | (~z));
     }
 
+    private static long FF(long a, long b, long c, long d, long x, long s,
+                           long ac) {
+        a += (F(b, c, d)&0xFFFFFFFFL) + x + ac;
+        a = ((a&0xFFFFFFFFL)<< s) | ((a&0xFFFFFFFFL) >>> (32 - s));
+        a += b;
+        return (a&0xFFFFFFFFL);
+    }
+
+    private static long GG(long a, long b, long c, long d, long x, long s,
+                           long ac) {
+        a += (G(b, c, d)&0xFFFFFFFFL) + x + ac;
+        a = ((a&0xFFFFFFFFL) << s) | ((a&0xFFFFFFFFL) >>> (32 - s));
+        a += b;
+        return (a&0xFFFFFFFFL);
+    }
+
+    private static long HH(long a, long b, long c, long d, long x, long s,
+                           long ac) {
+        a += (H(b, c, d)&0xFFFFFFFFL) + x + ac;
+        a = ((a&0xFFFFFFFFL) << s) | ((a&0xFFFFFFFFL) >>> (32 - s));
+        a += b;
+        return (a&0xFFFFFFFFL);
+    }
+
+    private static long II(long a, long b, long c, long d, long x, long s,
+                           long ac) {
+        a += (I(b, c, d)&0xFFFFFFFFL) + x + ac;
+        a = ((a&0xFFFFFFFFL) << s) | ((a&0xFFFFFFFFL) >>> (32 - s));
+        a += b;
+        return (a&0xFFFFFFFFL);
+    }
+
+
 }
