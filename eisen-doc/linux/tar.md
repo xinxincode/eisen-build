@@ -9,3 +9,6 @@ tar -xvf foo.tar
 tar -Jcvf foo.tar.xz foo
 #解压
 tar -Jxvf foo.tar.xz
+
+#解压gz包
+gzip -d foo.gz
