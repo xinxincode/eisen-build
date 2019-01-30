@@ -45,10 +45,11 @@ public class CheckFile {
 
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        File file1 = new File("D:\\迅雷下载\\apache-maven-3.6.0-bin.zip");
+        File file1 = new File("D:\\迅雷下载\\openjdk-11.0.2_windows-x64_bin.zip");
+         file1 = new File("D:\\迅雷下载\\jdk-11.0.2_windows-x64_bin.zip");
         FileInputStream file = new FileInputStream(file1);
         String s ;//= getCheckValue(file, "SHA1");
-//        System.out.println(s);
+//        System.out.println(s);f0b5f05a122d56b174763be9f993f215 0bcc285e44743fdc1d344d03f5fd663a
 //        System.out.println(s.length());
 //        s = getCheckValue(file, "SHA-256");
 //        System.out.println(s);
