@@ -1,5 +1,11 @@
 repositories {
-    mavenLocal()
+        mavenLocal()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url 'https://repo.spring.io/release/' }
+    mavenCentral()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url 'https://repo.spring.io/release/' }
+    mavenCentral()
 }
 
 ext {
@@ -35,7 +41,7 @@ ext {
     ]
 
     commons = [
-            fileupload: 'commons-fileupload:commons-fileupload:1.4'+commonsFilesUploadVersion,
+            fileupload: 'commons-fileupload:commons-fileupload:'+commonsFilesUploadVersion,
     ]
 
 }
