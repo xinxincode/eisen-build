@@ -19,7 +19,7 @@
         <version.mybatis-spring-boot-starter>2.0.0</version.mybatis-spring-boot-starter>
         <version.mybatis-generator-core>1.3.7</version.mybatis-generator-core>
         <version.commons-fileupload>1.4</version.commons-fileupload>
-        <version.gson>2.8.5</version.gson>
+        <version.gson>2.8.9</version.gson>
         <version.HikariCP>3.3.0</version.HikariCP>
         <version.metrics-core>4.0.5</version.metrics-core>
         <version.mysql-jdbc>8.0.14</version.mysql-jdbc>
